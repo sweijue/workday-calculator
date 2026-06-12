@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工作天計算器</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iI2YyZjhlOCIvPgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjciIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzNhNmIxMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KICA8dGV4dCB4PSIxNiIgeT0iMTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtd2VpZ2h0PSI3MDAiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZpbGw9IiMzYTZiMTAiPjU8L3RleHQ+CiAgPHRleHQgeD0iMTYiIHk9IjI3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiBmb250LXNpemU9IjYiIGZvbnQtd2VpZ2h0PSI1MDAiIGZvbnQtZmFtaWx5PSItYXBwbGUtc3lzdGVtLHNhbnMtc2VyaWYiIGZpbGw9IiM1ZTk0MjAiPuW3peS9nOWkqTwvdGV4dD4KPC9zdmc+">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fafaf8;--sf:#fff;--sf2:#f4f3ef;--sf3:#eceae4;
+  --tx:#1c1c1a;--tx2:#6a6a65;--tx3:#a8a8a0;
+  --bd:rgba(0,0,0,0.09);--bd2:rgba(0,0,0,0.16);
+  --gn:#3a6b10;--gn2:#5e9420;--gnl:#b9d990;--gnp:#e8f3d8;--gnx:#f2f8e8;
+  --rd:#a02828;--rdp:#fce8e8;
+  --am:#5e3306;--amp:#faebd4;
+  --bl:#1a5fa0;--pp:#3a30a0;--ppp:#eeecfe;--ppb:#b0a8ec;
+  --r:8px;--rl:12px;--sh:0 1px 3px rgba(0,0,0,0.06);
+  --f1:13px;--f2:15px;--f3:17px;--f4:19px;--f5:22px;--f6:26px;--f7:34px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding:22px 16px 64px;font-size:var(--f3)}
+.wrap{max-width:820px;margin:0 auto}
+.ph{margin-bottom:20px}
+.ph h1{font-size:var(--f6);font-weight:500;letter-spacing:-.01em}
+.ph p{font-size:var(--f2);color:var(--tx2);margin-top:4px}
+.fbar{display:flex;align-items:center;gap:8px;font-size:var(--f2);color:var(--tx2);margin-bottom:14px;padding:9px 14px;background:var(--sf);border:0.5px solid var(--bd);border-radius:var(--r)}
+.spin{width:13px;height:13px;border:2px solid var(--sf3);border-top-color:var(--tx2);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ai-tag{margin-left:auto;font-size:var(--f1);background:var(--ppp);color:var(--pp);padding:3px 9px;border-radius:20px;border:0.5px solid var(--ppb);white-space:nowrap}
+.sc{background:var(--sf);border:0.5px solid var(--bd);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:12px;box-shadow:var(--sh)}
+.slb{font-size:var(--f1);font-weight:600;color:var(--tx2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+.wdr{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.wb{padding:6px 14px;font-size:var(--f2);border:0.5px solid var(--bd2);border-radius:20px;cursor:pointer;background:var(--sf);color:var(--tx2);transition:all .15s;font-family:inherit}
+.wb:hover{border-color:var(--gn);color:var(--gn)}
+.wb.on{background:var(--gnp);border-color:var(--gn);color:var(--gn);font-weight:500}
+.tr{display:flex;align-items:center;gap:8px;font-size:var(--f3);color:var(--tx2);cursor:pointer;margin-bottom:6px}
+.tr:last-child{margin-bottom:0}
+.tr input{cursor:pointer;accent-color:var(--gn);width:16px;height:16px}
+.tabs{display:flex;background:var(--sf2);border:0.5px solid var(--bd);border-radius:var(--rl);overflow:hidden;margin-bottom:14px}
+.tab{flex:1;padding:10px 14px;font-size:var(--f2);font-weight:500;cursor:pointer;border:none;background:none;color:var(--tx2);transition:all .15s;font-family:inherit}
+.tab.on{background:var(--sf);color:var(--tx);border-radius:var(--r);margin:3px;box-shadow:var(--sh)}
+.tp{display:none}
+.tp.on{display:block}
+
+/* RESULT AREA */
+.result-area{margin-bottom:12px}
+.main-stat{text-align:center;padding:1rem 0 .75rem}
+.main-num{font-size:72px;font-weight:700;color:var(--gn);line-height:1}
+.main-lbl{font-size:var(--f2);color:var(--gn2);margin-top:4px;font-weight:500}
+.sub-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:440px){.sub-stats{grid-template-columns:repeat(3,1fr)}}
+.st{background:var(--sf2);border-radius:var(--r);padding:.7rem .875rem;text-align:center}
+.sn{font-size:var(--f7);font-weight:500;color:var(--tx)}
+.sl{font-size:var(--f1);color:var(--tx2);margin-top:3px}
+
+/* CAL */
+.cw{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+@media(max-width:560px){.cw{grid-template-columns:1fr}}
+.cc{background:var(--sf);border:0.5px solid var(--bd);border-radius:var(--rl);padding:.9rem 1rem;box-shadow:var(--sh)}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ct{font-size:var(--f3);font-weight:500}
+.cn{background:none;border:0.5px solid var(--bd);border-radius:var(--r);padding:3px 10px;cursor:pointer;color:var(--tx2);font-size:16px;line-height:1.5;font-family:inherit}
+.cn:hover{background:var(--sf2)}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:1px}
+.dw{font-size:var(--f1);text-align:center;color:var(--tx3);padding:4px 0;font-weight:500}
+.dw.s{color:#c04040}.dw.sa{color:var(--bl)}
+.dy{font-size:var(--f1);text-align:center;border-radius:5px;cursor:pointer;min-height:34px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.25;transition:background .1s}
+.dy:hover:not(.em){background:var(--sf2)}
+.dy.em{cursor:default;pointer-events:none}
+.dn{font-size:var(--f1);line-height:1}
+.hn{font-size:10px;line-height:1.15;white-space:nowrap;overflow:hidden;max-width:96%;text-overflow:ellipsis;margin-top:1px}
+.dy.su .dn{color:#c04040}
+.dy.sa2 .dn{color:var(--bl)}
+.dy.tod .dn{text-decoration:underline;text-underline-offset:2px;font-weight:500}
+.dy.ex{opacity:.35}
+.dy.hl{background:var(--rdp)}.dy.hl .hn{color:var(--rd)}
+.dy.co{background:var(--amp)}.dy.co .hn{color:var(--am)}
+.dy.ir{background:var(--gnx)}
+.dy.wd{background:var(--gnp)}.dy.wd .dn{color:var(--gn)}
+.dy.rs{background:var(--gn)!important}.dy.rs .dn{color:#fff!important;font-weight:500}
+.dy.re{background:var(--gn)!important}.dy.re .dn{color:#fff!important;font-weight:500}
+
+.hint{font-size:var(--f2);color:var(--tx2);text-align:center;padding:7px 0}
+.ha{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px}
+.clr{font-size:var(--f2);padding:5px 14px;border:0.5px solid var(--bd2);border-radius:20px;background:var(--sf);color:var(--tx2);cursor:pointer;font-family:inherit;transition:all .15s}
+.clr:hover{border-color:var(--rd);color:var(--rd);background:var(--rdp)}
+.lg{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.li{display:flex;align-items:center;gap:5px;font-size:var(--f2);color:var(--tx2)}
+.lq{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.hc{background:var(--sf);border:0.5px solid var(--bd);border-radius:var(--rl);padding:.9rem 1.25rem;margin-bottom:12px;box-shadow:var(--sh)}
+.hh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.hi{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:0.5px solid var(--bd);font-size:var(--f2)}
+.hi:last-child{border-bottom:none}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot.r{background:#e04444}.dot.a{background:#d4910f}
+.hn2{flex:1}
+.hd{color:var(--tx2);font-size:var(--f2);white-space:nowrap}
+.bge{font-size:var(--f1);padding:3px 8px;border-radius:20px;white-space:nowrap}
+.bge.a{background:var(--amp);color:var(--am);border:0.5px solid #e8c070}
+.eh{font-size:var(--f2);color:var(--tx3);text-align:center;padding:.875rem 0}
+
+/* FWD */
+.fi{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:440px){.fi{grid-template-columns:1fr}}
+.fl label{font-size:var(--f1);font-weight:600;color:var(--tx2);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:6px}
+.fl input{width:100%;font-size:var(--f3);padding:9px 12px;border:0.5px solid var(--bd2);border-radius:var(--r);background:var(--sf);color:var(--tx);outline:none;font-family:inherit}
+.fl input:focus{border-color:var(--gn);box-shadow:0 0 0 3px rgba(58,107,16,.1)}
+.fl input[type=number]{-moz-appearance:textfield}
+.fl input[type=number]::-webkit-inner-spin-button,.fl input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+.rb{background:var(--gnp);border:0.5px solid var(--gn2);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:12px;display:flex;align-items:baseline;gap:12px;box-shadow:var(--sh)}
+.rd2{font-size:var(--f7);font-weight:500;color:var(--gn)}
+.rw{font-size:var(--f4);color:var(--tx2)}
+
+/* ALL HOLIDAYS TABLE */
+.ahs{margin-top:28px}
+.ahs h2{font-size:var(--f5);font-weight:500;margin-bottom:14px}
+.yg{margin-bottom:20px}
+.yt{font-size:var(--f4);font-weight:500;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--gnp)}
+.ht{width:100%;border-collapse:collapse;background:var(--sf);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);border:0.5px solid var(--bd)}
+.ht th{font-size:var(--f1);font-weight:600;color:var(--tx2);letter-spacing:.06em;text-transform:uppercase;padding:9px 16px;background:var(--sf2);text-align:left;border-bottom:0.5px solid var(--bd)}
+.ht td{font-size:var(--f2);padding:9px 16px;border-bottom:0.5px solid var(--bd);vertical-align:middle}
+.ht tr:last-child td{border-bottom:none}
+.ht tr:hover td{background:var(--sf2)}
+.ht tr.tr-past td{color:var(--tx3) !important;opacity:.45}
+.ht tr.tr-past .cp,.ht tr.tr-past .sp{background:var(--sf3);color:var(--tx3);border-color:var(--tx3)}
+.td-date{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--tx2)}
+.td-name{font-weight:600;color:var(--tx)}
+.td-days{color:var(--tx2);text-align:right;white-space:nowrap}
+
+.ah-note{font-size:var(--f1);color:var(--tx3);margin-bottom:12px;line-height:1.6}
+.ah-note a{color:var(--bl);text-decoration:none}
+.ah-note a:hover{text-decoration:underline}
+/* YEAR TABS */
+.yr-tabs{display:flex;gap:0;background:var(--sf2);border:0.5px solid var(--bd);border-radius:var(--rl);overflow:hidden;margin-bottom:14px;width:fit-content}
+.yr-tab{padding:7px 22px;font-size:var(--f2);font-weight:500;cursor:pointer;border:none;background:none;color:var(--tx2);transition:all .15s;font-family:inherit}
+.yr-tab.on{background:var(--sf);color:var(--tx);border-radius:var(--r);margin:3px;box-shadow:var(--sh)}
+
+/* SOURCE */
+.src-section{margin-top:28px;padding-top:20px;border-top:1px solid var(--bd)}
+.src-section h2{font-size:var(--f5);font-weight:500;margin-bottom:12px}
+.src-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.src-card{background:var(--sf);border:0.5px solid var(--bd);border-radius:var(--rl);padding:.875rem 1.125rem;box-shadow:var(--sh)}
+.src-year{font-size:var(--f1);font-weight:600;color:var(--tx2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.src-title{font-size:var(--f3);font-weight:500;color:var(--tx);margin-bottom:8px}
+.src-links{display:flex;gap:8px;flex-wrap:wrap}
+.src-link{font-size:var(--f2);color:var(--bl);text-decoration:none;padding:3px 10px;border:0.5px solid rgba(26,95,160,.3);border-radius:20px;background:rgba(26,95,160,.04);transition:all .15s}
+.src-link:hover{background:rgba(26,95,160,.1);border-color:var(--bl)}
+.src-note{font-size:var(--f1);color:var(--tx3);margin-top:10px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="ph">
+  <h1>工作天計算器</h1>
+  <p>台灣國定假日・每次開啟自動更新</p>
+</div>
+<div class="fbar">
+  <span class="spin" id="spin"></span>
+  <span id="stxt">正在取得台灣最新假日資料…</span>
+  <span class="ai-tag">✦ 每次開啟自動更新</span>
+</div>
+<div class="sc">
+  <div class="slb">排除星期幾</div>
+  <div class="wdr" id="wdBtns">
+    <button class="wb on" data-d="0">日</button>
+    <button class="wb" data-d="1">一</button>
+    <button class="wb" data-d="2">二</button>
+    <button class="wb" data-d="3">三</button>
+    <button class="wb" data-d="4">四</button>
+    <button class="wb" data-d="5">五</button>
+    <button class="wb on" data-d="6">六</button>
+  </div>
+  <label class="tr"><input type="checkbox" id="skipHol" checked>跳過節假日</label>
+  <label class="tr"><input type="checkbox" id="skipStart">跳過起始日（起始日不算入工作天）</label>
+</div>
+<div class="tabs">
+  <button class="tab on" onclick="switchTab('range')">計算範圍天數</button>
+  <button class="tab" onclick="switchTab('fwd')">推算結束日期</button>
+</div>
+
+<!-- TAB RANGE -->
+<div class="tp on" id="tp-range">
+  <div class="lg">
+    <div class="li"><div class="lq" style="background:var(--gn)"></div>起訖日</div>
+    <div class="li"><div class="lq" style="background:var(--gnp)"></div>工作天</div>
+    <div class="li"><div class="lq" style="background:var(--gnx)"></div>範圍（排除）</div>
+    <div class="li"><div class="lq" style="background:var(--rdp)"></div>假日</div>
+    <div class="li"><div class="lq" style="background:var(--amp)"></div>連假</div>
+  </div>
+  <div class="cw"><div id="cA"></div><div id="cB"></div></div>
+  <div class="ha">
+    <span class="hint" id="hint" style="padding:0">點擊日期選擇開始，再點第二個日期選擇結束</span>
+    <button class="clr" onclick="clearRange()">✕ 清除</button>
+  </div>
+  <div class="result-area">
+    <div class="main-stat">
+      <div class="main-num" id="rW">—</div>
+      <div class="main-lbl">工作天</div>
+    </div>
+    <div class="sub-stats">
+      <div class="st"><div class="sn" id="rT">—</div><div class="sl">總日曆天</div></div>
+      <div class="st"><div class="sn" id="rE">—</div><div class="sl">週末排除</div></div>
+      <div class="st"><div class="sn" id="rH">—</div><div class="sl">假日排除</div></div>
+    </div>
+  </div>
+  <div class="hc">
+    <div class="hh"><div class="slb" style="margin:0">範圍內假日</div><span id="hbA"></span></div>
+    <div id="hlA"><div class="eh">選擇日期範圍後顯示假日明細</div></div>
+  </div>
+</div>
+
+<!-- TAB FWD -->
+<div class="tp" id="tp-fwd">
+  <div class="fi">
+    <div class="fl"><label>開始日期</label><input type="date" id="fS"></div>
+    <div class="fl"><label>工作天數</label><input type="number" id="fD" min="1" max="9999" placeholder="例：10"></div>
+  </div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:14px;margin-top:-8px">
+    <button class="clr" onclick="clearFwd()">✕ 清除</button>
+  </div>
+  <div id="fR" style="display:none">
+    <div class="rb"><span class="rd2" id="fED"></span><span class="rw" id="fEW"></span></div>
+    <div class="sub-stats" style="margin-bottom:12px">
+      <div class="st"><div class="sn" id="fW">—</div><div class="sl">工作天</div></div>
+      <div class="st"><div class="sn" id="fC">—</div><div class="sl">總日曆天</div></div>
+      <div class="st"><div class="sn" id="fH">—</div><div class="sl">跳過假日</div></div>
+    </div>
+    <div class="cw" id="fCW"></div>
+    <div class="hc">
+      <div class="hh"><div class="slb" style="margin:0">途中假日</div><span id="hbB"></span></div>
+      <div id="hlB"><div class="eh">—</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ALL HOLIDAYS -->
+<div class="ahs">
+  <h2>台灣國定假日一覽</h2>
+  <div class="ah-note">＊ 國定假日資料由 AI 整理，可能有誤，請依<a href="https://www.dgpa.gov.tw/informationlist?uid=30" target="_blank">官方公告</a>為準。</div>
+  <div class="yr-tabs" id="yrTabs"></div>
+  <div id="ahC"><div class="eh">載入中…</div></div>
+</div>
+
+<!-- SOURCE LINKS -->
+<div class="src-section">
+  <h2>官方行事曆來源</h2>
+  <div class="src-grid">
+    <div class="src-card">
+      <div class="src-year">行政院人事行政總處</div>
+      <div class="src-title">歷年政府行政機關辦公日曆表</div>
+      <div class="src-links">
+        <a class="src-link" href="https://www.dgpa.gov.tw/informationlist?uid=30" target="_blank">🗂 辦公日曆表總覽</a>
+        <a class="src-link" href="https://www.dgpa.gov.tw/informationlist?uid=41" target="_blank">🖼 行事曆圖檔總覽</a>
+      </div>
+    </div>
+  </div>
+  <div class="src-note">※ 以上為永久性總覽頁，每年人事總處公告新年度行事曆後點進去即可找到最新版本。<br>※ 本工具每次開啟時透過 AI 自動抓取最新假日；若失敗則使用內建備用資料。</div>
+</div>
+
+</div>
+<script>
+const AURL = "https://api.anthropic.com/v1/messages";
+const DOW = ['日','一','二','三','四','五','六'];
+const MN = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+
+// ── 假日資料
+// group = 連假名稱；每筆代表一個放假日（含橋接週末）
+// 名稱規則：主節日用節日名，橋接週六日用 group+'(六)'/'(日)'，補假用節日+'補假'
+const BUILTIN = [
+  // ══ 2026 ══ 共9個連假
+  // 元旦 1/1(四)，1/2(五)補假，1/3(六)，1/4(日)，共4天
+  {date:'2026-01-01', name:'元旦',       group:'元旦'},
+  {date:'2026-01-02', name:'元旦',       group:'元旦'},
+  {date:'2026-01-03', name:'元旦',       group:'元旦'},
+  {date:'2026-01-04', name:'元旦',       group:'元旦'},
+  // 春節 2/14(六)~2/22(日)，共9天
+  // 小年夜2/15(日)補至2/20(五)；除夕2/16(一)；初一~初三 2/17~2/19
+  {date:'2026-02-14', name:'春節',       group:'春節'},
+  {date:'2026-02-15', name:'春節',       group:'春節'},
+  {date:'2026-02-16', name:'除夕',       group:'春節'},
+  {date:'2026-02-17', name:'初一',       group:'春節'},
+  {date:'2026-02-18', name:'初二',       group:'春節'},
+  {date:'2026-02-19', name:'初三',       group:'春節'},
+  {date:'2026-02-20', name:'春節',       group:'春節'},
+  {date:'2026-02-21', name:'春節',       group:'春節'},
+  {date:'2026-02-22', name:'春節',       group:'春節'},
+  // 228 2/27(五)補假，2/28(六)，3/1(日)，共3天
+  {date:'2026-02-27', name:'和平紀念日', group:'和平紀念日'},
+  {date:'2026-02-28', name:'和平紀念日', group:'和平紀念日'},
+  {date:'2026-03-01', name:'和平紀念日', group:'和平紀念日'},
+  // 兒童節+清明 4/3(五)補假，4/4(六)兒童節，4/5(日)清明，4/6(一)補假，共4天
+  {date:'2026-04-03', name:'兒童節',     group:'兒童節・清明'},
+  {date:'2026-04-04', name:'兒童節',     group:'兒童節・清明'},
+  {date:'2026-04-05', name:'清明節',     group:'兒童節・清明'},
+  {date:'2026-04-06', name:'清明節',     group:'兒童節・清明'},
+  // 勞動節 5/1(五)，5/2(六)，5/3(日)，共3天
+  {date:'2026-05-01', name:'勞動節',     group:'勞動節'},
+  {date:'2026-05-02', name:'勞動節',     group:'勞動節'},
+  {date:'2026-05-03', name:'勞動節',     group:'勞動節'},
+  // 端午節 6/19(五)，6/20(六)，6/21(日)，共3天
+  {date:'2026-06-19', name:'端午節',     group:'端午節'},
+  {date:'2026-06-20', name:'端午節',     group:'端午節'},
+  {date:'2026-06-21', name:'端午節',     group:'端午節'},
+  // 中秋+教師節 9/25(五)中秋，9/26(六)，9/27(日)，9/28(一)教師節，共4天
+  {date:'2026-09-25', name:'中秋節',     group:'中秋節・教師節'},
+  {date:'2026-09-26', name:'中秋節',     group:'中秋節・教師節'},
+  {date:'2026-09-27', name:'中秋節',     group:'中秋節・教師節'},
+  {date:'2026-09-28', name:'教師節',     group:'中秋節・教師節'},
+  // 國慶 10/9(五)補假，10/10(六)國慶，10/11(日)，共3天
+  {date:'2026-10-09', name:'國慶日',     group:'國慶日'},
+  {date:'2026-10-10', name:'國慶日',     group:'國慶日'},
+  {date:'2026-10-11', name:'國慶日',     group:'國慶日'},
+  // 光復節 10/24(六)，10/25(日)光復節，10/26(一)補假，共3天
+  {date:'2026-10-24', name:'光復節',     group:'光復節'},
+  {date:'2026-10-25', name:'光復節',     group:'光復節'},
+  {date:'2026-10-26', name:'光復節',     group:'光復節'},
+  // 行憲紀念日 12/25(五)，12/26(六)，12/27(日)，共3天
+  {date:'2026-12-25', name:'行憲紀念日', group:'行憲紀念日'},
+  {date:'2026-12-26', name:'行憲紀念日', group:'行憲紀念日'},
+  {date:'2026-12-27', name:'行憲紀念日', group:'行憲紀念日'},
+
+  // ══ 2027 ══ 共9個連假（端午、中秋、教師節落週中，無連假）
+  // 元旦 1/1(五)，1/2(六)，1/3(日)，共3天
+  {date:'2027-01-01', name:'元旦',       group:'元旦'},
+  {date:'2027-01-02', name:'元旦',       group:'元旦'},
+  {date:'2027-01-03', name:'元旦',       group:'元旦'},
+  // 春節 2/4(四)除夕~2/10(三)，共7天
+  // 初二2/6(六)補至2/9(二)；初三2/7(日)補至2/10(三)
+  {date:'2027-02-04', name:'除夕',       group:'春節'},
+  {date:'2027-02-05', name:'初一',       group:'春節'},
+  {date:'2027-02-06', name:'初二',       group:'春節'},
+  {date:'2027-02-07', name:'初三',       group:'春節'},
+  {date:'2027-02-08', name:'初四',       group:'春節'},
+  {date:'2027-02-09', name:'春節',       group:'春節'},
+  {date:'2027-02-10', name:'春節',       group:'春節'},
+  // 228 2/27(六)，2/28(日)和平紀念日，3/1(一)補假，共3天
+  {date:'2027-02-27', name:'和平紀念日', group:'和平紀念日'},
+  {date:'2027-02-28', name:'和平紀念日', group:'和平紀念日'},
+  {date:'2027-03-01', name:'和平紀念日', group:'和平紀念日'},
+  // 兒童節+清明 4/3(六)，4/4(日)兒童節，4/5(一)清明，4/6(二)補假，共4天
+  {date:'2027-04-03', name:'兒童節',     group:'兒童節・清明'},
+  {date:'2027-04-04', name:'兒童節',     group:'兒童節・清明'},
+  {date:'2027-04-05', name:'清明節',     group:'兒童節・清明'},
+  {date:'2027-04-06', name:'兒童節',     group:'兒童節・清明'},
+  // 勞動節 4/30(五)補假，5/1(六)，5/2(日)，共3天
+  {date:'2027-04-30', name:'勞動節',     group:'勞動節'},
+  {date:'2027-05-01', name:'勞動節',     group:'勞動節'},
+  {date:'2027-05-02', name:'勞動節',     group:'勞動節'},
+  // 端午節 6/9(三) 單日
+  {date:'2027-06-09', name:'端午節',     group:null},
+  // 中秋節 9/15(三) 單日
+  {date:'2027-09-15', name:'中秋節',     group:null},
+  // 教師節 9/28(二) 單日
+  {date:'2027-09-28', name:'教師節',     group:null},
+  // 國慶 10/9(六)，10/10(日)國慶，10/11(一)補假，共3天
+  {date:'2027-10-09', name:'國慶日',     group:'國慶日'},
+  {date:'2027-10-10', name:'國慶日',     group:'國慶日'},
+  {date:'2027-10-11', name:'國慶日',     group:'國慶日'},
+  // 光復節 10/23(六)，10/24(日)，10/25(一)光復節，共3天
+  {date:'2027-10-23', name:'光復節',     group:'光復節'},
+  {date:'2027-10-24', name:'光復節',     group:'光復節'},
+  {date:'2027-10-25', name:'光復節',     group:'光復節'},
+  // 行憲紀念日 12/24(五)補假，12/25(六)，12/26(日)，共3天
+  {date:'2027-12-24', name:'行憲紀念日', group:'行憲紀念日'},
+  {date:'2027-12-25', name:'行憲紀念日', group:'行憲紀念日'},
+  {date:'2027-12-26', name:'行憲紀念日', group:'行憲紀念日'},
+  // 2028元旦：1/1(六)補至12/31(五)，接1/1(六)1/2(日)，共3天（跨年）
+  {date:'2027-12-31', name:'元旦',       group:'2028元旦'},
+  {date:'2028-01-01', name:'元旦',       group:'2028元旦'},
+  {date:'2028-01-02', name:'元旦',       group:'2028元旦'},
+];
+
+let holidays = [];
+let excDays = new Set([0,6]);
+let skipHol = true, skipStart = false;
+let selS = null, selE = null;
+let cMs = [new Date(), new Date(new Date().getFullYear(), new Date().getMonth()+1, 1)];
+let fCMs = [];
+
+function ds(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function pd(s){ return new Date(s+'T00:00:00'); }
+function tod(){ return ds(new Date()); }
+function addD(s,n){ var d=pd(s); d.setDate(d.getDate()+n); return ds(d); }
+function filterYrs(list){
+  var y = new Date().getFullYear();
+  return list.filter(function(h){
+    var hy = parseInt(h.date.slice(0,4));
+    if(hy===y || hy===y+1) return true;
+    if(hy===y+2 && h.date.slice(5,7)==='01') return true;
+    return false;
+  });
+}
+function getH(s){ return holidays.find(function(h){ return h.date===s; }) || null; }
+function cleanName(n){
+  if(n.indexOf('・')>=0) n=n.split('・')[0];
+  return n.replace(/[(]六[)]$/,'').replace(/[(]日[)]$/,'').replace(/補假$/,'').replace(/[(]六[)]/,'').replace(/[(]日[)]/,'').replace(/連假$/,'').trim();
+}
+
+// ── AI FETCH ──
+async function fetchHols(){
+  var y = new Date().getFullYear(), ny = y+1;
+  try{
+    var r = await fetch(AURL, {method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:3000,
+        messages:[{role:'user', content:'台灣'+y+'年及'+ny+'年政府行政機關辦公日曆表所有放假日（含補假、連假中的週末橋接日）。直接列出每一個放假日期。只回傳JSON陣列不加markdown：[{"date":"YYYY-MM-DD","name":"名稱","group":"連假名稱或null"}]。連假中的週六日也要列入，group填連假名稱；單日假日逢週五或週一接週末也要將週末列入同一group。假日名稱不要帶連假二字，用節日本名。'}]})
+    });
+    var data = await r.json();
+    var txt = (data.content||[]).map(function(i){ return i.text||''; }).join('').replace(/```json|```/g,'').trim();
+    var parsed = JSON.parse(txt);
+    if(parsed && parsed.length > 10){
+      holidays = filterYrs(parsed);
+      document.getElementById('spin').style.display='none';
+      document.getElementById('stxt').textContent = '已更新 '+holidays.length+' 個放假日（'+y+'–'+ny+'）';
+    } else throw new Error();
+  } catch(e){
+    holidays = filterYrs(BUILTIN.slice());
+    document.getElementById('spin').style.display='none';
+    document.getElementById('stxt').textContent = '使用內建資料（'+y+'–'+ny+'）';
+  }
+  renderBoth(); updateRng(); renderAllH();
+}
+
+// ── TAB ──
+function switchTab(t){
+  document.querySelectorAll('.tab').forEach(function(b,i){ b.classList.toggle('on', ['range','fwd'][i]===t); });
+  document.querySelectorAll('.tp').forEach(function(p){ p.classList.remove('on'); });
+  document.getElementById('tp-'+t).classList.add('on');
+}
+
+// ── RENDER CAL ──
+function renderCal(id, yr, mo, pFn, nFn, sDs, eDs){
+  var el = document.getElementById(id); if(!el) return;
+  var fd = new Date(yr,mo,1).getDay(), dim = new Date(yr,mo+1,0).getDate(), td = tod();
+  var s = sDs, e = eDs; if(s&&e&&s>e){ var t=s;s=e;e=t; }
+  var h = '<div class="cc"><div class="ch">'
+    +'<button class="cn" onclick="'+pFn+'">&#8249;</button>'
+    +'<span class="ct">'+yr+' 年 '+MN[mo]+'</span>'
+    +'<button class="cn" onclick="'+nFn+'">&#8250;</button>'
+    +'</div><div class="cg">'
+    +'<div class="dw s">日</div><div class="dw">一</div><div class="dw">二</div>'
+    +'<div class="dw">三</div><div class="dw">四</div><div class="dw">五</div>'
+    +'<div class="dw sa">六</div>';
+  for(var i=0;i<fd;i++) h+='<div class="dy em"></div>';
+  for(var d=1;d<=dim;d++){
+    var obj=new Date(yr,mo,d), dstr=ds(obj), dow=obj.getDay();
+    var hol=getH(dstr);
+    var isExc=excDays.has(dow), isHS=skipHol&&hol;
+    var inR=s&&e&&dstr>=s&&dstr<=e;
+    var isWd=inR&&!isExc&&!isHS;
+    var isS=dstr===s, isE=dstr===e;
+    var cls='dy';
+    if(dow===0) cls+=' su';
+    if(dow===6) cls+=' sa2';
+    if(dstr===td) cls+=' tod';
+    if(hol&&hol.group) cls+=' co'; else if(hol) cls+=' hl';
+    if(isExc) cls+=' ex';
+    if(inR&&!isS&&!isE){ cls+=' ir'; if(isWd) cls+=' wd'; }
+    if(isS) cls+=' rs';
+    if(isE) cls+=' re';
+    var rawName = hol ? hol.name.replace(/\(六\)/g,'').replace(/\(日\)/g,'').replace(/補假$/,'').trim() : '';
+    var hn = hol ? '<span class="hn">'+rawName+'</span>' : '';
+    h+='<div class="'+cls+'" onclick="dayClk(\''+dstr+'\')"><span class="dn">'+d+'</span>'+hn+'</div>';
+  }
+  h+='</div></div>';
+  el.innerHTML=h;
+}
+
+function renderBoth(){
+  renderCal('cA',cMs[0].getFullYear(),cMs[0].getMonth(),'pA()','nA()',selS,selE);
+  renderCal('cB',cMs[1].getFullYear(),cMs[1].getMonth(),'pB()','nB()',selS,selE);
+}
+function pA(){ cMs[0]=new Date(cMs[0].getFullYear(),cMs[0].getMonth()-1,1); renderBoth(); }
+function nA(){ cMs[0]=new Date(cMs[0].getFullYear(),cMs[0].getMonth()+1,1); renderBoth(); }
+function pB(){ cMs[1]=new Date(cMs[1].getFullYear(),cMs[1].getMonth()-1,1); renderBoth(); }
+function nB(){ cMs[1]=new Date(cMs[1].getFullYear(),cMs[1].getMonth()+1,1); renderBoth(); }
+
+window.dayClk = function(dstr){
+  if(!document.getElementById('tp-range').classList.contains('on')) return;
+  if(!selS||selE){
+    selS=dstr; selE=null;
+    document.getElementById('hint').textContent='已選開始：'+dstr.slice(5).replace('-','/')+'，再點一個日期選擇結束';
+  } else {
+    if(dstr===selS){ selS=null; document.getElementById('hint').textContent='點擊日期選擇開始，再點第二個日期選擇結束'; }
+    else {
+      selE=dstr;
+      var a=selS,b=selE; if(a>b){var t=a;a=b;b=t;}
+      document.getElementById('hint').textContent=a.slice(5).replace('-','/')+' → '+b.slice(5).replace('-','/');
+    }
+    updateRng();
+  }
+  renderBoth();
+};
+
+function clearRange(){
+  selS=null; selE=null;
+  document.getElementById('hint').textContent='點擊日期選擇開始，再點第二個日期選擇結束';
+  document.getElementById('rW').textContent='—';
+  document.getElementById('rT').textContent='—';
+  document.getElementById('rE').textContent='—';
+  document.getElementById('rH').textContent='—';
+  document.getElementById('hlA').innerHTML='<div class="eh">選擇日期範圍後顯示假日明細</div>';
+  document.getElementById('hbA').innerHTML='';
+  renderBoth();
+}
+function clearFwd(){ document.getElementById('fD').value=''; document.getElementById('fR').style.display='none'; document.getElementById('fCW').innerHTML=''; }
+
+// ── CALC ──
+function calcRng(sDs, eDs){
+  var cur=pd(sDs), end=pd(eDs), total=0, wknd=0, holC=0, work=0, rh=[];
+  var first=true;
+  while(cur<=end){
+    var d=ds(cur), dow=cur.getDay();
+    if(first&&skipStart){ first=false; cur.setDate(cur.getDate()+1); total++; continue; }
+    first=false; total++;
+    var isExc=excDays.has(dow), h=getH(d), isHS=skipHol&&h;
+    if(isExc) wknd++;
+    else if(isHS){ holC++; rh.push(Object.assign({},h,{dStr:d})); }
+    else work++;
+    cur.setDate(cur.getDate()+1);
+  }
+  return {work:work, total:total, wknd:wknd, holC:holC, rh:rh};
+}
+
+function updateRng(){
+  if(!selS||!selE){
+    document.getElementById('rW').textContent='—';
+    document.getElementById('rT').textContent='—';
+    document.getElementById('rE').textContent='—';
+    document.getElementById('rH').textContent='—';
+    document.getElementById('hlA').innerHTML='<div class="eh">選擇日期範圍後顯示假日明細</div>';
+    document.getElementById('hbA').innerHTML=''; return;
+  }
+  var a=selS,b=selE; if(a>b){var t=a;a=b;b=t;}
+  var res=calcRng(a,b);
+  document.getElementById('rW').textContent=res.work;
+  document.getElementById('rT').textContent=res.total;
+  document.getElementById('rE').textContent=res.wknd;
+  document.getElementById('rH').textContent=res.holC;
+  renderHL('hlA','hbA',res.rh);
+}
+
+function renderHL(lid, bid, rh){
+  var uniq=rh.filter(function(v,i,a){ return a.findIndex(function(x){ return x.dStr===v.dStr; })===i; });
+  if(!uniq.length){
+    document.getElementById(lid).innerHTML='<div class="eh" style="color:var(--gn)">此範圍內無假日</div>';
+    document.getElementById(bid).innerHTML=''; return;
+  }
+  var grps={}, singles=[];
+  uniq.forEach(function(h){
+    if(h.group){ if(!grps[h.group]) grps[h.group]=[]; grps[h.group].push(h); }
+    else singles.push(h);
+  });
+  var html='';
+  Object.keys(grps).forEach(function(g){
+    var days=grps[g];
+    html+='<div class="hi"><span class="dot a"></span>'
+      +'<span class="hn2" style="font-weight:500">'+g+'</span>'
+      +'<span class="bge a">'+days.length+'天</span>'
+      +'<span class="hd" style="margin-left:auto">'+days[0].dStr.slice(5)+'–'+days[days.length-1].dStr.slice(5)+'</span></div>';
+  });
+  singles.forEach(function(h){
+    html+='<div class="hi"><span class="dot r"></span><span class="hn2">'+h.name+'</span><span class="hd">'+h.dStr.slice(5)+'</span></div>';
+  });
+  document.getElementById(lid).innerHTML=html;
+  document.getElementById(bid).innerHTML='<span class="bge a">'+uniq.length+' 天假日</span>';
+}
+
+// ── FORWARD ──
+function calcFwd(){
+  var sStr=document.getElementById('fS').value, dStr=document.getElementById('fD').value;
+  if(!sStr||!dStr||parseInt(dStr)<1){ document.getElementById('fR').style.display='none'; return; }
+  var target=parseInt(dStr), cur=pd(sStr), wc=0, cc=0, rh=[];
+  if(skipStart){ cur.setDate(cur.getDate()+1); cc++; }
+  while(wc<target){
+    var d=ds(cur), dow=cur.getDay(); cc++;
+    var isExc=excDays.has(dow), h=getH(d), isHS=skipHol&&h;
+    if(!isExc&&!isHS) wc++;
+    else if(isHS) rh.push(Object.assign({},h,{dStr:d}));
+    if(wc<target) cur.setDate(cur.getDate()+1);
+  }
+  var endStr=ds(cur), endDow=cur.getDay();
+  document.getElementById('fED').textContent=endStr.replace(/-/g,'/');
+  document.getElementById('fEW').textContent='週'+DOW[endDow];
+  document.getElementById('fW').textContent=wc;
+  document.getElementById('fC').textContent=cc;
+  var uH=rh.filter(function(v,i,a){ return a.findIndex(function(x){ return x.dStr===v.dStr; })===i; });
+  document.getElementById('fH').textContent=uH.length;
+  document.getElementById('fR').style.display='block';
+  renderHL('hlB','hbB',rh);
+  var sm=pd(sStr), em=pd(endStr); fCMs=[];
+  var m=new Date(sm.getFullYear(),sm.getMonth(),1);
+  var emEnd=new Date(em.getFullYear(),em.getMonth(),1);
+  while(m<=emEnd && fCMs.length<8){ fCMs.push(new Date(m)); m.setMonth(m.getMonth()+1); }
+  renderFCals(sStr,endStr);
+}
+function renderFCals(s,e){
+  var w=document.getElementById('fCW'); w.innerHTML='';
+  fCMs.forEach(function(mo,i){
+    var id='fc'+i, d=document.createElement('div'); d.id=id; w.appendChild(d);
+    renderCal(id,mo.getFullYear(),mo.getMonth(),'fPN('+i+',-1,\''+s+'\',\''+e+'\')','fPN('+i+',1,\''+s+'\',\''+e+'\')',s,e);
+  });
+}
+window.fPN = function(i,dir,s,e){ fCMs[i]=new Date(fCMs[i].getFullYear(),fCMs[i].getMonth()+dir,1); renderFCals(s,e); };
+
+// ── ALL HOLIDAYS TABLE ──
+function fmtMD(dateStr, baseYear){
+  var d=pd(dateStr), y=d.getFullYear();
+  var prefix = (baseYear && y!==parseInt(baseYear)) ? y+'/' : '';
+  return prefix+(d.getMonth()+1)+'/'+String(d.getDate()).padStart(2,'0')+'('+DOW[d.getDay()]+')';
+}
+function renderAllH(){
+  var todayStr = tod();
+  // 最簡邏輯：key = group+'_'+年份，只取第一筆名稱，後面只更新 end 日期
+  var seen = {}, rows = [];
+  holidays.slice().sort(function(a,b){ return a.date < b.date ? -1 : 1; }).forEach(function(h){
+    if(h.group){
+      // 跨年橋接：同 group 且距上一筆 end <= 3 天，沿用舊 key
+      var key = null;
+      var ks = Object.keys(seen);
+      for(var i=0; i<ks.length; i++){
+        if(seen[ks[i]].group === h.group){
+          var diff = Math.round((pd(h.date) - pd(seen[ks[i]].end)) / 86400000);
+          if(diff >= 0 && diff <= 3){ key = ks[i]; break; }
+        }
+      }
+      if(!key) key = h.group + '_' + h.date.slice(0,4);
+      if(!seen[key]){
+        seen[key] = { group:h.group, name:h.name, start:h.date, end:h.date, isGroup:true };
+        rows.push(seen[key]);
+      } else {
+        if(h.date > seen[key].end) seen[key].end = h.date;
+      }
+    } else {
+      rows.push({ name:h.name, start:h.date, end:h.date, isGroup:false });
+    }
+  });
+
+  // 依 start 年份分組
+  var yrs = {};
+  rows.forEach(function(r){
+    var y = r.start.slice(0,4);
+    if(!yrs[y]) yrs[y] = [];
+    yrs[y].push(r);
+  });
+
+  var yrKeys = Object.keys(yrs).sort();
+  var activeYr = window._ahActiveYr || yrKeys[0];
+  if(yrKeys.indexOf(activeYr) < 0) activeYr = yrKeys[0];
+  window._ahActiveYr = activeYr;
+
+  // 年份 tabs
+  var tabsEl = document.getElementById('yrTabs');
+  tabsEl.innerHTML = yrKeys.map(function(y){
+    return '<button class="yr-tab' + (y===activeYr?' on':'') + '" onclick="setAhYear(\'' + y + '\')">'+y+' 年</button>';
+  }).join('');
+
+  // 當年表格
+  var list = (yrs[activeYr]||[]).slice().sort(function(a,b){ return a.start < b.start ? -1 : 1; });
+  var html = '<table class="ht"><thead><tr>'
+           + '<th>日期</th><th>節日</th><th class="th-days">天數</th>'
+           + '</tr></thead><tbody>';
+  list.forEach(function(r){
+    var single = (r.start === r.end);
+    var days = single ? 1 : Math.round((pd(r.end) - pd(r.start)) / 86400000) + 1;
+    var baseY = r.start.slice(0,4);
+    var dateStr = single ? fmtMD(r.start,baseY) : fmtMD(r.start,baseY) + ' ~ ' + fmtMD(r.end,baseY);
+    var nameEl = r.isGroup ? '<span class="cp">'+r.name+'</span>' : '<span class="sp">'+r.name+'</span>';
+    var past = r.end < todayStr ? 'tr-past' : '';
+    html += '<tr class="'+past+'">'
+          + '<td class="tdd">'+dateStr+'</td>'
+          + '<td>'+nameEl+'</td>'
+          + '<td class="td2">'+days+'天</td>'
+          + '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('ahC').innerHTML = html;
+}
+
+function setAhYear(y){ window._ahActiveYr = y; renderAllH(); }
+
+function setAhYear(y){
+  window._ahActiveYr = y;
+  renderAllH();
+}
+
+// ── SETTINGS ──
+document.getElementById('wdBtns').querySelectorAll('.wb').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var d=parseInt(btn.dataset.d);
+    if(excDays.has(d)) excDays.delete(d); else excDays.add(d);
+    btn.classList.toggle('on', excDays.has(d));
+    renderBoth(); updateRng(); calcFwd();
+  });
+});
+document.getElementById('skipHol').addEventListener('change', function(){ skipHol=this.checked; renderBoth(); updateRng(); calcFwd(); });
+document.getElementById('skipStart').addEventListener('change', function(){ skipStart=this.checked; updateRng(); calcFwd(); });
+document.getElementById('fS').addEventListener('change', calcFwd);
+document.getElementById('fD').addEventListener('input', calcFwd);
+
+// ── INIT ──
+var _t=new Date();
+document.getElementById('fS').value=_t.getFullYear()+'-'+String(_t.getMonth()+1).padStart(2,'0')+'-'+String(_t.getDate()).padStart(2,'0');
+holidays = filterYrs(BUILTIN.slice());
+renderBoth();
+renderAllH();
+fetchHols();
+</script>
+</body>
+</html>
